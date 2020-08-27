@@ -8,6 +8,25 @@ class Blockchain(object):
         self.pending_transactions = []
         self.new_block(previous_hash="The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.", proof=100)
 
+    def proof_of_work(self, last_proof):
+        """
+        This method is where you the consensus algorithm is implemented. 
+        It takes two parameters including self and last_proof
+        """
+        proof = 0
+
+        while self.valid_proof(last_proof, proof) is False:
+            proof +=1
+        return proof
+
+    def valid_proof(self, last_proof, proof):
+        """This method validates the block"""
+
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+
+        return guess_hash[:4] == "0000"
+
     def new_block(self, proof, previous_hash=None):
         """
         Create a new block listing key/value pairs of block information in a JSON object.
