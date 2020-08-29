@@ -140,17 +140,17 @@ def new_transaction():
     response = {'message': f'Transaction is scheduled to be added to Block No. {index}'}
     return jsonify(response), 201
 
-@app.router('/chain', methods=['GET'])
+@app.route('/chain', methods=['GET'])
 
 def full_chain():
-   response = {
-       'chain' : blockchain.chain,
-       'length' : len(blockchain.chain)
-   }
-   return jsonify(response), 200
+    response = {
+        'chain' : blockchain.chain,
+        'length' : len(blockchain.chain)
+    }
+    return jsonify(response), 200
 
 if __name__ == '__main__':
-   app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000)
 
 
 # blockchain = Blockchain()
