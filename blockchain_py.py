@@ -1,7 +1,8 @@
 import hashlib
 import json
 from time import time
-import flask
+from flask import Flask
+from uuid import uuid4
 
 class Blockchain(object):
     def __init__(self):
