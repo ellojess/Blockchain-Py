@@ -51,7 +51,6 @@ class Blockchain(object):
         # Return the index of the block to which our new transaction will be added.
         return self.last_block['index'] + 1
 
-    @staticmethod
     def hash(self, block):
         """
         Receive one block.
