@@ -1,7 +1,7 @@
 import hashlib
 import json
 from time import time
-from flask import Flask
+from flask import Flask, jsonify, request
 from uuid import uuid4
 
 class Blockchain(object):
@@ -9,29 +9,6 @@ class Blockchain(object):
         self.chain = []
         self.pending_transactions = []
         self.new_block(previous_hash="The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.", proof=100)
-
-    def proof_of_work(self, last_proof):
-        """
-        This method is where you the consensus algorithm is implemented. 
-        It takes two parameters including self and last_proof
-        """
-        proof = 0
-
-        while self.valid_proof(last_proof, proof) is False:
-            proof +=1
-        return proof
-
-        @staticmethod
-
-    def valid_proof(self, last_proof, proof):
-        """This method validates the block"""
-
-        guess = f'{last_proof}{proof}'.encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
-
-        return guess_hash[:4] == "0000"
-
-
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -75,7 +52,6 @@ class Blockchain(object):
         return self.last_block['index'] + 1
 
     @staticmethod
-
     def hash(self, block):
         """
         Receive one block.
@@ -93,6 +69,26 @@ class Blockchain(object):
 
         return hex_hash
 
+    def proof_of_work(self, last_proof):
+        """
+        This method is where you the consensus algorithm is implemented. 
+        It takes two parameters including self and last_proof
+        """
+        proof = 0
+
+        while self.valid_proof(last_proof, proof) is False:
+            proof +=1
+        return proof
+
+    @staticmethod
+    def valid_proof(self, last_proof, proof):
+        """This method validates the block"""
+
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+
+        return guess_hash[:4] == "0000"
+
 
 # Creating the app node
 app = Flask(__name__)
@@ -102,7 +98,6 @@ node_identifier = str(uuid4()).replace('-','')
 blockchain = Blockchain()
 
 @app.route('/mine', methods=['GET'])
-
 def mine():
     """Here we make the proof of work algorithm work"""
     last_block = blockchain.last_block
@@ -131,7 +126,6 @@ def mine():
     return jsonify(response), 200
 
 @app.route('/transactions/new', methods=['POST'])
-
 def new_transaction():
     values = request.get_json()
     
@@ -142,12 +136,11 @@ def new_transaction():
         return 'Missing values', 400
 
     # Creaing a new transaction 
-    index = blockchain.new_transaction(values['sender'], values['recipient', values['amount']])
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
     response = {'message': f'Transaction is scheduled to be added to Block No. {index}'}
     return jsonify(response), 201
 
 @app.route('/chain', methods=['GET'])
-
 def full_chain():
     response = {
         'chain' : blockchain.chain,
@@ -156,10 +149,11 @@ def full_chain():
     return jsonify(response), 200
 
 if __name__ == '__main__':
+    app.debug = True
     app.run(host="0.0.0.0", port=5000)
 
 
-# blockchain = Blockchain()
+blockchain = Blockchain()
 t1 = blockchain.new_transaction("Satoshi", "Mike", '5 BTC')
 t2 = blockchain.new_transaction("Mike", "Satoshi", '1 BTC')
 t3 = blockchain.new_transaction("Satoshi", "Hal", '5 BTC')
