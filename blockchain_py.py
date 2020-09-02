@@ -21,6 +21,8 @@ class Blockchain(object):
             proof +=1
         return proof
 
+        @staticmethod
+
     def valid_proof(self, last_proof, proof):
         """This method validates the block"""
 
@@ -28,6 +30,8 @@ class Blockchain(object):
         guess_hash = hashlib.sha256(guess).hexdigest()
 
         return guess_hash[:4] == "0000"
+
+
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -69,6 +73,8 @@ class Blockchain(object):
         self.pending_transactions.append(transaction)
         # Return the index of the block to which our new transaction will be added.
         return self.last_block['index'] + 1
+
+    @staticmethod
 
     def hash(self, block):
         """
